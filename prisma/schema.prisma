@@ -14,4 +14,15 @@ model Supplier {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   name String
   location String
+  products Product[]
+}
+
+model Product {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  description String
+  price Int
+  supplierId String @map("_supplierId") // Utilise @map pour spécifier le mappage
+  supplier Supplier @relation(fields: [supplierId], references: [id])
+  createdAt DateTime @default(now())
 }

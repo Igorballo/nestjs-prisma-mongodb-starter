@@ -16,7 +16,13 @@ export class SuppliersService {
   }
 
   findAll() {
-    return this.prismaService.supplier.findMany();
+    return this.prismaService.supplier.findMany(
+        {
+          include: {
+            products: true,
+          },
+        }
+    );
   }
 
   findOne(id: number) {
