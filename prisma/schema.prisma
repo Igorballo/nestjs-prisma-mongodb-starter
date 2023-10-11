@@ -26,3 +26,21 @@ model Product {
   supplier Supplier @relation(fields: [supplierId], references: [id])
   createdAt DateTime @default(now())
 }
+
+model User {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  username String
+  full_name String
+  email String @unique @map("email")
+  password_hash String?
+  role String @default("member")
+  // role Role @default(member)
+  phone_number String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+}
+
+enum Role {
+  admin
+  member
+}
