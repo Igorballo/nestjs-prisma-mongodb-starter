@@ -27,17 +27,14 @@
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
 ```bash
-# development
-$ git clone https://github.com/gausoft/nestjs-crud-demo
+$ git clone git@github.com:Igorballo/nestjs-prisma-mongodb-starter.git
 ```
 
 ```bash
-# development
 $ cd nestjs-prisma-mongodb-starter
 ```
 
 ```bash
-# development
 $ cp .env.example .env #and add your own variables
 ```
 
