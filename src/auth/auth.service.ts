@@ -58,7 +58,9 @@ export class AuthService {
       }
       const passwordMatch  = await bcrypt.compare(password, user.password_hash)
       if (passwordMatch) {
-        const token = this.jwtService.sign({ id: user.id });
+        const token = this.jwtService.sign({ id: user.id }, { secret: "2a$12$gltC0AassLwfjzd7KlEi1O.cTkbAOdUh/caZj9L/8qlZe0NEbemy." });
+        delete user.password_hash;
+
         return {
           error: false,
           message: "your are login",
