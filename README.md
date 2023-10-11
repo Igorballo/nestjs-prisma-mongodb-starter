@@ -26,6 +26,19 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+```bash
+$ git clone git@github.com:Igorballo/nestjs-prisma-mongodb-starter.git
+```
+
+```bash
+$ cd nestjs-prisma-mongodb-starter
+```
+
+```bash
+$ cp .env.example .env #and add your own variables
+```
+
+
 ## Installation
 
 ```bash
@@ -39,7 +52,7 @@ $ npm install
 $ npm run start
 
 # watch mode
-$ npm run start:dev
+$ npm run nest
 
 # production mode
 $ npm run start:prod
