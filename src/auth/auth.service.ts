@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
+import { LoginDto } from './dto/login.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import {PrismaService} from "src/prisma/prisma.service";
-const bcrypt = require('bcrypt');
+import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly prismaService: PrismaService) {
-  }
+  constructor(private readonly prismaService: PrismaService, private jwtService: JwtService) {}
   async signup(createAuthDto: CreateAuthDto) {
     const { email, password, role, full_name,username, phone_number } = createAuthDto
     try {
@@ -35,6 +36,38 @@ export class AuthService {
       });
 
       return { error: false, message: "Utilisateur cré avec succès", code: 200, user: user };
+    } catch (e) {
+      return { message: "Une erreur s'est produite", error: e.message };
+    }
+  }
+
+  async signin(loginDto: LoginDto) {
+    const { email, phone_number, password } = loginDto
+    try {
+      const user = await this.prismaService.user.findFirst({
+        where: {
+          OR: [
+            { email: email },
+            { phone_number: phone_number },
+          ],
+        },
+      });
+
+      if (!user) {
+        return { error: true, message: "Les informations de connexion sont incorrects", code: 404 };
+      }
+      const passwordMatch  = await bcrypt.compare(password, user.password_hash)
+      if (passwordMatch) {
+        const token = this.jwtService.sign({ id: user.id });
+        return {
+          error: false,
+          message: "your are login",
+          token: token,
+          user: user
+        }
+      } else {
+        return { error: true, message: "Les informations de connexion sont incorrects", code: 404 };
+      }
     } catch (e) {
       return { message: "Une erreur s'est produite", error: e.message };
     }
