@@ -52,7 +52,7 @@ $ npm install
 $ npm run start
 
 # watch mode
-$ npm run start:dev
+$ npm run nest
 
 # production mode
 $ npm run start:prod
