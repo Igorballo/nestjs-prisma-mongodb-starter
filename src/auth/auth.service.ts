@@ -5,10 +5,11 @@ import { UpdateAuthDto } from './dto/update-auth.dto';
 import {PrismaService} from "src/prisma/prisma.service";
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import {ConfigService} from "@nestjs/config";
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly prismaService: PrismaService, private jwtService: JwtService) {}
+  constructor(private readonly prismaService: PrismaService, private jwtService: JwtService, private configService: ConfigService) {}
   async signup(createAuthDto: CreateAuthDto) {
     const { email, password, role, full_name,username, phone_number } = createAuthDto
     try {
@@ -57,10 +58,11 @@ export class AuthService {
         return { error: true, message: "Les informations de connexion sont incorrects", code: 404 };
       }
       const passwordMatch  = await bcrypt.compare(password, user.password_hash)
-      if (passwordMatch) {
-        const token = this.jwtService.sign({ id: user.id }, { secret: "2a$12$gltC0AassLwfjzd7KlEi1O.cTkbAOdUh/caZj9L/8qlZe0NEbemy." });
-        delete user.password_hash;
 
+      if (passwordMatch) {
+        const secret = this.configService.get<string>('JWT_SECRET_CODE');
+        const token = this.jwtService.sign({ id: user.id }, { secret });
+        delete user.password_hash;
         return {
           error: false,
           message: "your are login",
