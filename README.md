@@ -45,6 +45,12 @@ $ cp .env.example .env #and add your own variables
 $ npm install
 ```
 
+## Run migrations
+
+```bash
+$ npx prisma generate
+```
+
 ## Running the app
 
 ```bash
