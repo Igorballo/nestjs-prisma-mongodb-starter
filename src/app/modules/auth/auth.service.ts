@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { LoginDto } from './dto/login.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
-import {PrismaService} from "src/prisma/prisma.service";
+import {PrismaService} from "src/shared/prisma/prisma.service";
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import {ConfigService} from "@nestjs/config";

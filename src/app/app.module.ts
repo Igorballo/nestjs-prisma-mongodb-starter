@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { PrismaModule } from './prisma/prisma.module';
-import { ProductsModule } from './products/products.module';
-import { SuppliersModule } from './suppliers/suppliers.module';
-import { AuthModule } from './auth/auth.module';
+import { PrismaModule } from 'src/shared/prisma/prisma.module';
+import { ProductsModule } from './modules/products/products.module';
+import { SuppliersModule } from './modules/suppliers/suppliers.module';
+import { AuthModule } from './modules/auth/auth.module';
 import {JwtModule} from "@nestjs/jwt";
 import {ConfigModule} from "@nestjs/config";
 
