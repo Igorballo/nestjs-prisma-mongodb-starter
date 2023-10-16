@@ -1,26 +1,34 @@
 import { Injectable } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { LoginDto } from './dto/login.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
-import {PrismaService} from "src/shared/prisma/prisma.service";
+import { PrismaService } from 'src/shared/prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import {ConfigService} from "@nestjs/config";
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly prismaService: PrismaService, private jwtService: JwtService, private configService: ConfigService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private jwtService: JwtService,
+    private configService: ConfigService,
+  ) {}
   async signup(createAuthDto: CreateAuthDto) {
-    const { email, password, role, full_name,username, phone_number } = createAuthDto
+    const { email, password, role, full_name, username, phone_number } =
+      createAuthDto;
     try {
       const existingUser = await this.prismaService.user.findUnique({
         where: {
-          email: email
+          email: email,
         },
       });
 
       if (existingUser) {
-        return { error: true, message: "Cet email est déja utilisé", code: 404 };
+        return {
+          error: true,
+          message: 'Cet email est déja utilisé',
+          code: 404,
+        };
       }
 
       const hashedPassword = await bcrypt.hash(password, 10);
@@ -32,32 +40,38 @@ export class AuthService {
           full_name: full_name,
           phone_number: phone_number,
           role: role,
-          password_hash: hashedPassword
-        }
+          password_hash: hashedPassword,
+        },
       });
 
-      return { error: false, message: "Utilisateur cré avec succès", code: 200, user: user };
+      return {
+        error: false,
+        message: 'Utilisateur cré avec succès',
+        code: 200,
+        user: user,
+      };
     } catch (e) {
       return { message: "Une erreur s'est produite", error: e.message };
     }
   }
 
   async signin(loginDto: LoginDto) {
-    const { email, phone_number, password } = loginDto
+    const { email, phone_number, password } = loginDto;
     try {
       const user = await this.prismaService.user.findFirst({
         where: {
-          OR: [
-            { email: email },
-            { phone_number: phone_number },
-          ],
+          OR: [{ email: email }, { phone_number: phone_number }],
         },
       });
 
       if (!user) {
-        return { error: true, message: "Les informations de connexion sont incorrects", code: 404 };
+        return {
+          error: true,
+          message: 'Les informations de connexion sont incorrects',
+          code: 404,
+        };
       }
-      const passwordMatch  = await bcrypt.compare(password, user.password_hash)
+      const passwordMatch = await bcrypt.compare(password, user.password_hash);
 
       if (passwordMatch) {
         const secret = this.configService.get<string>('JWT_SECRET_CODE');
@@ -65,12 +79,16 @@ export class AuthService {
         delete user.password_hash;
         return {
           error: false,
-          message: "your are login",
+          message: 'your are login',
           token: token,
-          user: user
-        }
+          user: user,
+        };
       } else {
-        return { error: true, message: "Les informations de connexion sont incorrects", code: 404 };
+        return {
+          error: true,
+          message: 'Les informations de connexion sont incorrects',
+          code: 404,
+        };
       }
     } catch (e) {
       return { message: "Une erreur s'est produite", error: e.message };
@@ -83,10 +101,6 @@ export class AuthService {
 
   findOne(id: number) {
     return `This action returns a #${id} auth`;
-  }
-
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
   }
 
   remove(id: number) {
