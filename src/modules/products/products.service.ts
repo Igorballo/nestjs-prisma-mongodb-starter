@@ -10,10 +10,15 @@ export class ProductsService {
   async create(createProductDto: CreateProductDto) {
     try {
       const product = await this.prismaService.product.create({
-        data: createProductDto
+        data: createProductDto,
       });
 
-      return { error : false, message: "Ajout réussi", code: 200, product: product}
+      return {
+        error: false,
+        message: 'Ajout réussi',
+        code: 200,
+        product: product,
+      };
     } catch (error) {
       return { message: "Une erreur s'est produite", error: error.message };
     }
@@ -21,14 +26,12 @@ export class ProductsService {
 
   async findAll() {
     try {
-      const products = await this.prismaService.product.findMany(
-          {
-            include: {
-              supplier: true
-            }
-          }
-      );
-      return { error : false, code: 200, products: products}
+      const products = await this.prismaService.product.findMany({
+        include: {
+          supplier: true,
+        },
+      });
+      return { error: false, code: 200, products: products };
     } catch (error) {
       return { message: "Une erreur s'est produite", error: error.message };
     }
@@ -38,41 +41,50 @@ export class ProductsService {
     try {
       const product = await this.prismaService.product.findUnique({
         where: {
-          id
+          id,
         },
       });
 
       if (!product) {
-        return { error: true, message: "Produit introuvable", code: 404 };
+        return { error: true, message: 'Produit introuvable', code: 404 };
       }
 
-      return { error: false, message: "Produit retrouvé", code: 200, product: product };
+      return {
+        error: false,
+        message: 'Produit retrouvé',
+        code: 200,
+        product: product,
+      };
     } catch (e) {
       return { message: "Une erreur s'est produite", error: e.message };
     }
   }
 
   async update(id: string, updateProductDto: UpdateProductDto) {
-    const { name, description, price, supplierId } = updateProductDto
     try {
       const existingProduct = await this.prismaService.product.findUnique({
         where: {
-          id
+          id,
         },
       });
 
       if (!existingProduct) {
-        return { error: true, message: "Produit introuvable", code: 404 };
+        return { error: true, message: 'Produit introuvable', code: 404 };
       }
 
       const product = await this.prismaService.product.update({
         where: {
-          id
+          id,
         },
-        data: updateProductDto
+        data: updateProductDto,
       });
 
-      return { error: false, message: "Mise à jour réussie", code: 200, product: product };
+      return {
+        error: false,
+        message: 'Mise à jour réussie',
+        code: 200,
+        product: product,
+      };
     } catch (e) {
       return { message: "Une erreur s'est produite", error: e.message };
     }
@@ -82,23 +94,23 @@ export class ProductsService {
     try {
       const existingProduct = await this.prismaService.product.findUnique({
         where: {
-          id
+          id,
         },
       });
 
-      console.log(existingProduct)
+      console.log(existingProduct);
 
       if (!existingProduct) {
-        return { error: true, message: "Produit introuvable", code: 404 };
+        return { error: true, message: 'Produit introuvable', code: 404 };
       }
 
       await this.prismaService.product.delete({
         where: {
-          id
+          id,
         },
       });
 
-      return { error: false, message: "Suppression réussie", code: 200 };
+      return { error: false, message: 'Suppression réussie', code: 200 };
     } catch (e) {
       return { message: "Une erreur s'est produite", error: e.message };
     }
